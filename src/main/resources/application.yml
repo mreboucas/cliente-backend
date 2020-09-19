@@ -1,0 +1,33 @@
+
+spring:
+  application:
+    name: cliente
+  data:
+    mongodb:
+      host: 172.25.100.157
+      port: 27017
+      database: pca
+      username: user_pca
+      password: IbFVr8lcBilLhuXntOlKbtbq0/HhfTdgDGXpU6fmaodQNEnPsIXyrReqYEHW4GkrFsAr6314Mg7yAASo
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: NON_NULL
+
+server:
+  port: 8090
+
+  servlet:
+    context-path: /api
+
+---
+
+
+#eureka:
+#  instance:
+#    preferIpAddress: true
+#    ip-address: ${PUBLISH_IP}
+#    non-secure-port: ${PORT}
+#  client:
+#    serviceUrl:
+#      defaultZone: http://${PUBLISH_IP}:8761/eureka/
