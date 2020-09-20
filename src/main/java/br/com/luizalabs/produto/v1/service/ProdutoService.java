@@ -1,10 +1,12 @@
 package br.com.luizalabs.produto.v1.service;
 
-import java.util.List;
 import org.springframework.stereotype.Service;
+import br.com.luizalabs.produto.v1.client.ProdutoRestClient;
 import br.com.luizalabs.produto.v1.dto.ProdutoDTO;
-import br.com.luizalabs.produto.v1.feign.ProdutoFeign;
-import br.com.luizalabs.util.exception.PaginaProdutoInvaldaException;
+import br.com.luizalabs.produto.v1.dto.ProdutoPaginadoDTO;
+import br.com.luizalabs.util.exception.JsonProcessExceptionException;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * @author Marcelo Reboucas - marceloreboucas10@gmail.com - 19 de set de 2020 as 06:19:09
@@ -12,29 +14,18 @@ import br.com.luizalabs.util.exception.PaginaProdutoInvaldaException;
 @Service
 public class ProdutoService {
 	
-	private final ProdutoFeign produtoFeign;
+	private ProdutoRestClient produtoRestClient;
 
-	public ProdutoService(ProdutoFeign produtoFeign) {
-		this.produtoFeign = produtoFeign;
+	public ProdutoService(ProdutoRestClient produtoRestClient) {
+		this.produtoRestClient = produtoRestClient;
 	}
 
-	public List<ProdutoDTO> consultarProdutoPorPagina(int pagina) throws PaginaProdutoInvaldaException {
-
-		if (pagina <= 0) {
-			throw new PaginaProdutoInvaldaException();
-		}
-
-		List<ProdutoDTO> produtoDTOList = produtoFeign.consultarPorPagina(pagina);
-
-		return produtoDTOList;
+	public Flux<ProdutoPaginadoDTO> consultarProdutoPorPagina(int pagina) throws JsonProcessExceptionException {
+		return this.produtoRestClient.consultarProdutoPorPagina(pagina);
 
 	}
 
-	public ProdutoDTO consultarProdutoPorId(int idProduto) {
-
-		ProdutoDTO produtoDTO = produtoFeign.consultarPorIdProduto(idProduto);
-
-		return produtoDTO;
-
+	public Mono<ProdutoDTO> consultarProdutoPorId(String idProduto) {
+		return this.produtoRestClient.consultarProdutoPorId(idProduto);
 	}
 }
