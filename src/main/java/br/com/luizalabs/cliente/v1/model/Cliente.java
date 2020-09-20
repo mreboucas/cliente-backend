@@ -2,6 +2,8 @@ package br.com.luizalabs.cliente.v1.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,14 +12,18 @@ import lombok.Setter;
  */
 @Setter
 @Getter
+@ApiModel(value = "Cliente", description = "Cliente API Magalu/LuizaLabs")
 @Document(collection = "cliente")
 public class Cliente {
 	
+	@ApiModelProperty("Identificador do cliente")
 	@Id
 	private String id;
 	
+	@ApiModelProperty("Nome do cliente")
 	private String nome;
 	
+	@ApiModelProperty("Email do cliente")
 	private String email;
 
 }
