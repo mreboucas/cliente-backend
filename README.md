@@ -55,5 +55,31 @@ http://localhost:8090/api/swagger-ui.html
 
 plugin sonar lint (eclipse, sts ou vs code)
 
+
+# Testar o Micro Serviço
+
+<b>1)</b>  Acesse o diretório do projeto: <b>/src/main/resources/scripts</b> para inicializar o mongo
+
+
+<h4>Execute esse arquivo:</h4>
+
+```
+./docker-init.sh 
+```
+
+<h4>Depois execute as seguintes linhas de comando no terminal para criar o banco, usuário e collection::</h4>
+
+```
+mongo -u user_root -p root admin
+
+use luiza_db
+
+db.createUser({user: "luizalabs_user", pwd: "SSDW/Thtywtu9vDYl0T9WHk9Ujze16WH0LUD9l+/1nuJXyOmMCG/KeZzmtoXoxL9BZ8MVgWf5ZEqj4bg", roles: [{ role: "readWrite", db: "luiza_db" }],mechanisms: ["SCRAM-SHA-1"]});
+
+db.createCollection("clientes")
+ 
+```
+
+
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
