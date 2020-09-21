@@ -4,11 +4,11 @@ spring:
     name: cliente
   data:
     mongodb:
-      host: 172.25.100.157
+      host: localhost
       port: 27017
-      database: pca
-      username: user_pca
-      password: IbFVr8lcBilLhuXntOlKbtbq0/HhfTdgDGXpU6fmaodQNEnPsIXyrReqYEHW4GkrFsAr6314Mg7yAASo
+      database: luiza_db
+      username: luizalabs_user
+      password: SSDW/Thtywtu9vDYl0T9WHk9Ujze16WH0LUD9l+/1nuJXyOmMCG/KeZzmtoXoxL9BZ8MVgWf5ZEqj4bg
   jackson:
     deserialization:
       fail-on-unknown-properties: false
