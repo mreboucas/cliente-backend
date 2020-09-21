@@ -1,16 +1,18 @@
 package br.com.luizalabs.produto.v1.feign;
 
 import java.util.List;
-import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import br.com.luizalabs.produto.v1.dto.ProdutoDTO;
 
 /**
+ * 
+ * Outra aborgem em relação ao RestTemplate
+ * 
  * @author Marcelo Reboucas - marceloreboucas10@gmail.com - 19 de set de 2020 as 05:57:47 
  */
-@FeignClient(url = "http://challenge-api.luizalabs.com/api/product", name = "Api-luizalabs", decode404 = true)
+/** @FeignClient(url = "http://challenge-api.luizalabs.com/api/product", name = "Api-luizalabs", decode404 = true) */
 public interface ProdutoFeign {
 	
 	/**

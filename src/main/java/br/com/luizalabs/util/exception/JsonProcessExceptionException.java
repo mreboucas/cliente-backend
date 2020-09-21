@@ -6,17 +6,17 @@ import org.apache.commons.lang3.StringUtils;
  * @author Marcelo Reboucas - marceloreboucas10@gmail.com - 19 de set de 2020 as 06:22:18 
  */
 
-public class PaginaProdutoInvaldaException extends Exception {
+public class JsonProcessExceptionException extends Exception {
 
-	private static final String MSG_EXCEPTION = "Id da página inválido. Deve ser um valor maior que 0";
+	private static final String MSG_EXCEPTION = "Erro ao tentar realizar o parse do json para o objeto.\n";
 	
 	private static final long serialVersionUID = -5404643289799216710L;
 
-	public PaginaProdutoInvaldaException() {
+	public JsonProcessExceptionException() {
 		super(MSG_EXCEPTION);
 	}
 
-	public PaginaProdutoInvaldaException(String message) {
+	public JsonProcessExceptionException(String message) {
 		super(StringUtils.isNotBlank(message) ? MSG_EXCEPTION + " " + message : MSG_EXCEPTION);
 	}
 }
