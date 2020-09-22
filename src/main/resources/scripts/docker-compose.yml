@@ -9,9 +9,11 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=user_root
       - MONGO_INITDB_ROOT_PASSWORD=root
+#      - MONGO_INITDB_DATABASE=luiza_db1
     ports:
       - "27017:27017"
     volumes:
       - /volume/mongo/setup.:/setup
       - /volume/mongo/data.:/data/db
+#      - ./mongodb-setup.js:/docker-entrypoint-initdb.d/mongodb-setup.js:ro
     command: --auth

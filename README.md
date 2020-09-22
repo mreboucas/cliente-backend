@@ -69,6 +69,8 @@ plugin sonar lint (eclipse, sts ou vs code)
 
 <h4>Depois execute as seguintes linhas de comando no terminal para criar o banco, usuário e collection::</h4>
 
+<i><b>Detalhe:</b> esse passo será preciso executar apenas uma vez.</i>
+
 ```
 mongo -u user_root -p root admin
 
@@ -77,6 +79,8 @@ use luiza_db
 db.createUser({user: "luizalabs_user", pwd: "SSDW/Thtywtu9vDYl0T9WHk9Ujze16WH0LUD9l+/1nuJXyOmMCG/KeZzmtoXoxL9BZ8MVgWf5ZEqj4bg", roles: [{ role: "readWrite", db: "luiza_db" }],mechanisms: ["SCRAM-SHA-1"]});
 
 db.createCollection("clientes")
+
+db.createCollection("clientes_test")
  
 ```
 

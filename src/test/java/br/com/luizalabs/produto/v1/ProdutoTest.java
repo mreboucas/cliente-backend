@@ -68,8 +68,6 @@ public class ProdutoTest {
 			} catch (JsonProcessExceptionException e) {
 				log.error(e.getMessage());
 			}
-			
-//			assertEquals(produtoPaginadoDTO.block().getMeta().getPage_number(), pagina);
 		});
 	}
 }

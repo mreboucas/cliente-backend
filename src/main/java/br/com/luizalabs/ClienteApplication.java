@@ -7,11 +7,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
-import com.mongodb.client.MongoCollection;
 
 @SpringBootApplication
+@EnableReactiveMongoRepositories
 public class ClienteApplication {
 
 	@Autowired
@@ -30,12 +31,9 @@ public class ClienteApplication {
        template.setRequestFactory(new HttpComponentsClientHttpRequestFactory(HttpClients.custom().setConnectionManager(connectionManager).build()));
        return template;
    }	
-   
-   @Bean
-   public void createMongoDbConfig() {
-   	
-   	if (!mongoTemplate.getCollectionNames().contains("clientes")) {
-   	    MongoCollection collection = mongoTemplate.createCollection("clientes");
-   	}
-   }
+	/*
+	 * @Bean public void createMongoDbConfig() {
+	 * 
+	 * if (!mongoTemplate.getCollectionNames().contains("clientes")) { MongoCollection collection = mongoTemplate.createCollection("clientes"); } }
+	 */
 }
