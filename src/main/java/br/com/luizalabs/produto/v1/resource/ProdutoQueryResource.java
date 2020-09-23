@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import br.com.luizalabs.produto.v1.dto.ProdutoDTO;
 import br.com.luizalabs.produto.v1.dto.ProdutoPaginadoDTO;
-import br.com.luizalabs.produto.v1.service.ProdutoService;
+import br.com.luizalabs.produto.v1.service.ProdutoQueryService;
 import br.com.luizalabs.util.exception.JsonProcessExceptionException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,11 +25,11 @@ import reactor.core.publisher.Mono;
 @SwaggerDefinition(tags = {@Tag(name = "Produtos")})
 @RestController
 @RequestMapping("v1/produto")
-public class ProdutoResource {
+public class ProdutoQueryResource {
 
-	private ProdutoService produtoService;
+	private ProdutoQueryService produtoService;
 
-	public ProdutoResource(ProdutoService produtoService) {
+	public ProdutoQueryResource(ProdutoQueryService produtoService) {
 		super();
 		this.produtoService = produtoService;
 	}

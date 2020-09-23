@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import br.com.luizalabs.cliente.v1.model.Cliente;
 import br.com.luizalabs.cliente.v1.model.ProdutoFavorito;
+import br.com.luizalabs.produto.v1.dto.ProdutoDTO;
+import br.com.luizalabs.produto.v1.service.ProdutoQueryService;
 import br.com.luizalabs.util.exception.BusinessException;
 import br.com.luizalabs.util.exceptionhandler.Erro;
 import reactor.core.publisher.Flux;
@@ -22,13 +24,18 @@ import reactor.core.publisher.Mono;
 public class ClienteRulesService {
 
 	private final ClienteQueryService clienteQueryService;
+	private final ProdutoQueryService produtoQueryService;
+	
+	private final static int BAD_REQUEST = HttpStatus.BAD_REQUEST.value();
 
-	public ClienteRulesService(ClienteQueryService clienteQueryService) {
+	public ClienteRulesService(ClienteQueryService clienteQueryService, ProdutoQueryService produtoQueryService) {
 		this.clienteQueryService = clienteQueryService;
+		this.produtoQueryService = produtoQueryService;
 	}
 
 	public void realizarValidacoes(Cliente cliente) throws BusinessException {
 		verificarSeEmailJaEstaCadastrado(cliente);
+		verificarSeOsProdutosExistemNaBase(cliente);
 		verificarSeClientePossuiProdutoDuplicado(cliente);
 	}
 
@@ -42,15 +49,15 @@ public class ClienteRulesService {
 			Optional<Cliente> cliOptional = clienteAux.collectList().block().stream().filter(cli -> !cli.getId().equals(cliente.getId())).findFirst();
 
 			if (cliOptional.isPresent()) {
-				throw new BusinessException(new Erro(HttpStatus.BAD_REQUEST.value(), "Email já cadastrado", "Email já cadastrado", "email"));
+				throw new BusinessException(new Erro(BAD_REQUEST, "Email já cadastrado", "Email já cadastrado", "email"));
 			}
 		}
 	}
 
 	private void verificarSeClientePossuiProdutoDuplicado(Cliente cliente) throws BusinessException {
-		Set<Erro> erroSet = new LinkedHashSet<>();
-		if (!CollectionUtils.isEmpty(cliente.getProdutoFavoritoList())) {
 
+		if (!CollectionUtils.isEmpty(cliente.getProdutoFavoritoList())) {
+			Set<Erro> erroSet = new LinkedHashSet<>();
 			List<ProdutoFavorito> produtoFavoritoAuxList = cliente.getProdutoFavoritoList();
 			if (cliente.getId() != null) {
 				Mono<Cliente> clienteMono = this.clienteQueryService.findById(cliente.getId());
@@ -63,14 +70,31 @@ public class ClienteRulesService {
 			Set<String> produtoFavoritoSet = new LinkedHashSet<>();
 			cliente.getProdutoFavoritoList().forEach(produtoFavorito -> {
 				if (!produtoFavoritoSet.add(produtoFavorito.getIdProduto())) {
-					Erro erro = new Erro(HttpStatus.BAD_REQUEST.value(), "Produto de id: " + produtoFavorito.getIdProduto() + " já foi adicionado", "produtoFavoritoList:idProduto", "Produto duplicado");
+					Erro erro = new Erro(BAD_REQUEST, "Produto de id: " + produtoFavorito.getIdProduto() + " já foi adicionado", "produtoFavoritoList:idProduto", "Produto duplicado");
 					erroSet.add(erro);
 				}
 			});
+			if (!CollectionUtils.isEmpty(erroSet)) {
+				throw new BusinessException(new ArrayList<>(erroSet));
+			}
 		}
-
-		if (!CollectionUtils.isEmpty(erroSet)) {
-			throw new BusinessException(new ArrayList<>(erroSet));
+	}
+	
+	private void verificarSeOsProdutosExistemNaBase(Cliente cliente) throws BusinessException {
+		
+		if (!CollectionUtils.isEmpty(cliente.getProdutoFavoritoList())) {
+			List<Erro> erroList = new ArrayList<>();
+			cliente.getProdutoFavoritoList().forEach(produto -> {
+				Mono<ProdutoDTO> produtoMonoDb = this.produtoQueryService.consultarProdutoPorId(produto.getIdProduto());
+				if (produtoMonoDb == null || produtoMonoDb.block() == null) {
+					Erro erro = new Erro(BAD_REQUEST, "Produto não existente na base de dados", "Produto não existente na base de dados", "produtoFavoritoList:idProduto");
+					erro.setValue(produto.getIdProduto());
+					erroList.add(erro);
+				}
+			});
+			if (!CollectionUtils.isEmpty(erroList)) {
+				throw new BusinessException(erroList);
+			}
 		}
 	}
 }

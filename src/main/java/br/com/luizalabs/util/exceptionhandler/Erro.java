@@ -21,6 +21,7 @@ public class Erro implements Serializable {
 	private int statusCode;
 	private String messageForUser;
 	private String nameField;
+	private String value;
 	private String messageForDeveloper;
 	private String exception;
 	

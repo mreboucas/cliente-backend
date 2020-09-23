@@ -10,7 +10,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.DeleteResult;
 import br.com.luizalabs.cliente.v1.model.Cliente;
-import br.com.luizalabs.cliente.v1.service.ClienteService;
+import br.com.luizalabs.cliente.v1.service.ClienteCommandService;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,14 +22,14 @@ import lombok.Setter;
 @Setter
 public class ClienteServiceTeste {
 	
-	private final ClienteService clienteService;
+	private final ClienteCommandService clienteService;
 	
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	
 	private static final String COLLECTION_CLIENTE_TEST = "clientes_test";
 	
-	public ClienteServiceTeste(ClienteService clienteService) {
+	public ClienteServiceTeste(ClienteCommandService clienteService) {
 		super();
 		this.clienteService = clienteService;
 	}

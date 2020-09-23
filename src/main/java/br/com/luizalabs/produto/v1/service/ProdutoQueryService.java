@@ -12,11 +12,11 @@ import reactor.core.publisher.Mono;
  * @author Marcelo Reboucas - marceloreboucas10@gmail.com - 19 de set de 2020 as 06:19:09
  */
 @Service
-public class ProdutoService {
+public class ProdutoQueryService {
 	
 	private ProdutoRestClient produtoRestClient;
 
-	public ProdutoService(ProdutoRestClient produtoRestClient) {
+	public ProdutoQueryService(ProdutoRestClient produtoRestClient) {
 		this.produtoRestClient = produtoRestClient;
 	}
 
