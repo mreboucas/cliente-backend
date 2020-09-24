@@ -5,6 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -14,6 +15,7 @@ import br.com.luizalabs.produto.v1.dto.ProdutoDTO;
 import br.com.luizalabs.produto.v1.service.ProdutoQueryService;
 import br.com.luizalabs.util.exception.BusinessException;
 import br.com.luizalabs.util.exceptionhandler.Erro;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -21,12 +23,13 @@ import reactor.core.publisher.Mono;
  * @author Marcelo Reboucas - marceloreboucas10@gmail.com - 22 de set de 2020 as 15:56:20
  */
 @Service
+@Slf4j
 public class ClienteRulesService {
 
 	private final ClienteQueryService clienteQueryService;
 	private final ProdutoQueryService produtoQueryService;
 	
-	private final static int BAD_REQUEST = HttpStatus.BAD_REQUEST.value();
+	private final int badRequestCode = HttpStatus.BAD_REQUEST.value();
 
 	public ClienteRulesService(ClienteQueryService clienteQueryService, ProdutoQueryService produtoQueryService) {
 		this.clienteQueryService = clienteQueryService;
@@ -38,7 +41,14 @@ public class ClienteRulesService {
 		verificarSeOsProdutosExistemNaBase(cliente);
 		verificarSeClientePossuiProdutoDuplicado(cliente);
 	}
-
+	/**
+	 * 
+	 * @INFO: essa validação poderia ter sido realizada, também, via mongo Index. Gostou? Legal demais!
+	 * @link: https://docs.mongodb.com/manual/core/index-unique/ 
+	 *
+	 * @param cliente
+	 * @throws BusinessException
+	 */
 	private void verificarSeEmailJaEstaCadastrado(Cliente cliente) throws BusinessException {
 
 		Cliente clienteEmailParam = new Cliente();
@@ -49,7 +59,7 @@ public class ClienteRulesService {
 			Optional<Cliente> cliOptional = clienteAux.collectList().block().stream().filter(cli -> !cli.getId().equals(cliente.getId())).findFirst();
 
 			if (cliOptional.isPresent()) {
-				throw new BusinessException(new Erro(BAD_REQUEST, "Email já cadastrado", "Email já cadastrado", "email"));
+				throw new BusinessException(new Erro(badRequestCode, "Email já cadastrado", "Email já cadastrado", "email"));
 			}
 		}
 	}
@@ -70,7 +80,7 @@ public class ClienteRulesService {
 			Set<String> produtoFavoritoSet = new LinkedHashSet<>();
 			cliente.getProdutoFavoritoList().forEach(produtoFavorito -> {
 				if (!produtoFavoritoSet.add(produtoFavorito.getIdProduto())) {
-					Erro erro = new Erro(BAD_REQUEST, "Produto de id: " + produtoFavorito.getIdProduto() + " já foi adicionado", "produtoFavoritoList:idProduto", "Produto duplicado");
+					Erro erro = new Erro(badRequestCode, "Produto de id: " + produtoFavorito.getIdProduto() + " já foi adicionado", "produtoFavoritoList:idProduto", "Produto duplicado");
 					erroSet.add(erro);
 				}
 			});
@@ -80,21 +90,43 @@ public class ClienteRulesService {
 		}
 	}
 	
+	@SuppressWarnings("restriction")
 	private void verificarSeOsProdutosExistemNaBase(Cliente cliente) throws BusinessException {
 		
 		if (!CollectionUtils.isEmpty(cliente.getProdutoFavoritoList())) {
 			List<Erro> erroList = new ArrayList<>();
 			cliente.getProdutoFavoritoList().forEach(produto -> {
-				Mono<ProdutoDTO> produtoMonoDb = this.produtoQueryService.consultarProdutoPorId(produto.getIdProduto());
-				if (produtoMonoDb == null || produtoMonoDb.block() == null) {
-					Erro erro = new Erro(BAD_REQUEST, "Produto não existente na base de dados", "Produto não existente na base de dados", "produtoFavoritoList:idProduto");
+				Mono<ProdutoDTO> produtoMonoDb = Mono.empty();
+				try {
+					produtoMonoDb = this.produtoQueryService.consultarProdutoPorId(produto.getIdProduto());
+				} catch (Exception e) {
+					log.error(e.getMessage());
+				}
+				ProdutoDTO produtoAux = produtoMonoDb.block();
+				if (produtoAux == null) {
+					Erro erro = new Erro(badRequestCode, "Produto não existente na base de dados", "Produto não existente na base de dados", "produtoFavoritoList:idProduto");
 					erro.setValue(produto.getIdProduto());
 					erroList.add(erro);
+				} else {
+					produto.setNome(produtoAux.getTitle());
 				}
 			});
 			if (!CollectionUtils.isEmpty(erroList)) {
 				throw new BusinessException(erroList);
 			}
+		}
+	}
+	
+	public void validarExclusaoCliente(Cliente cliente) throws BusinessException {
+		if (cliente == null || !StringUtils.isNotBlank(cliente.getId())) {
+			throw new BusinessException(new Erro(badRequestCode, "Cliente não pode ser excluído, id obrigatório", null, "id"));
+		}
+		Mono<Cliente> cliAux = clienteQueryService.findById(cliente.getId());
+		
+		if (cliAux.block() == null) {
+			Erro erro = new Erro(badRequestCode, "Cliente não pode ser excluído, pois não foi encontrado na base de dados com esse id", null, null);
+			erro.setValue(cliente.getId());
+			throw new BusinessException(erro);
 		}
 	}
 }

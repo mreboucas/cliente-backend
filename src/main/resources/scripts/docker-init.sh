@@ -1,9 +1,14 @@
 #!/bin/bash
 
-echo "Início docker compose"
+echo "################### INÍCIO DOCKER COMPOSE #############################"
 
 docker-compose down
 docker-compose up -d
 
-echo "Fim docker compose"
+echo "################### FIM DOCKER COMPOSE #############################"
+
+echo "-------------------------------------------------------------------------------------------"
+echo ">>>>>>>>>>>> PRONTO, MONGO RODANDO -> AGORA VOCÊ PODERÁ TESTAR O MICROSERVIÇO <<<<<<<<<<<<<"
+echo "-------------------------------------------------------------------------------------------"
+
 

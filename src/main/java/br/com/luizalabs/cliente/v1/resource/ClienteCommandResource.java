@@ -2,7 +2,9 @@ package br.com.luizalabs.cliente.v1.resource;
 
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import br.com.luizalabs.cliente.v1.model.Cliente;
 import br.com.luizalabs.cliente.v1.service.ClienteCommandService;
+import br.com.luizalabs.usuarioautenticaco.enumeration.RolesEnum;
+import br.com.luizalabs.util.constants.RoleUtil;
 import br.com.luizalabs.util.exception.BusinessException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,6 +45,7 @@ public class ClienteCommandResource {
 	@ApiResponses({@ApiResponse(code = 201, message = "Criado"), @ApiResponse(code = 405, message = "Método informado na requisição não é o esperado pelo backend")})
 	@ResponseStatus(code = HttpStatus.CREATED)
 	@PostMapping
+	@PreAuthorize("hasRole('" + RoleUtil.ROLE_ADMIN_SPRING +"')" + " && hasRole('" + RoleUtil.ROLE_USER_SPRING +"')")
 	public Mono<Void> salvar(@Valid @RequestBody Cliente clienteDto) throws BusinessException {
 		this.clienteCommandService.salvar(clienteDto);
 		return Mono.empty();
@@ -50,6 +55,7 @@ public class ClienteCommandResource {
 	@ApiResponses({@ApiResponse(code = 200, message = "Ok"), @ApiResponse(code = 405, message = "Método informado na requisição não é o esperado pelo backend")})
 	@ResponseStatus(code = HttpStatus.OK)
 	@PutMapping
+	@PreAuthorize("hasRole('" + RoleUtil.ROLE_ADMIN_SPRING +"')" + " && hasRole('" + RoleUtil.ROLE_USER_SPRING +"')")
 	public Mono<Void> atualizar(@Valid @RequestBody Cliente clienteDto) throws BusinessException {
 		this.clienteCommandService.salvar(clienteDto);
 		return Mono.empty();
@@ -58,9 +64,10 @@ public class ClienteCommandResource {
 	@ApiOperation(value = "Deleta um cliente", notes = "Responsável por deletar na base um cliente")
 	@ApiResponses({@ApiResponse(code = 200, message = "Ok"), @ApiResponse(code = 405, message = "Método informado na requisição não é o esperado pelo backend")})
 	@ResponseStatus(code = HttpStatus.OK)
-	@DeleteMapping
-	public Mono<Void> deletar(@RequestBody Cliente clienteDto) {
-		this.clienteCommandService.deletar(clienteDto);
+	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('" + RoleUtil.ROLE_ADMIN_SPRING +"')")
+	public Mono<Void> deletar(@PathVariable (required = true) String id) throws BusinessException {
+		this.clienteCommandService.deletar(id);
 		return Mono.empty();
 	}
 }

@@ -55,8 +55,14 @@ http://localhost:8090/api/swagger-ui.html
 
 plugin sonar lint (eclipse, sts ou vs code)
 
+# Criar a imagem docker
+No terminal, no diretório raiz do projeto execute:
 
-# Testar o Micro Serviço
+```
+docker build -t cliente-api .
+```
+
+# Testar o Micro Serviço - Local host
 
 <b>1)</b>  Acesse o diretório do projeto: <b>/src/main/resources/scripts</b> para inicializar o mongo
 

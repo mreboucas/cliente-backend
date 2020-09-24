@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cliente-api-luizalabs-deployment
+  labels:
+    app: cliente-api-luizalabs
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: cliente-api-luizalabs
+  template:
+    metadata:
+      labels:
+        app: cliente-api-luizalabs
+    spec:
+      containers:
+      - name: cliente-api-luizalabs
+        image: cliente-api-luizalabs:0.1.0
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8090

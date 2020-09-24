@@ -46,4 +46,8 @@ public class Cliente {
 	@ApiModelProperty("Listagem dos produtos favoritos do cliente")
 	private List<ProdutoFavorito> produtoFavoritoList;
 
+	public Cliente(String id) {
+		super();
+		this.id = id;
+	}
 }

@@ -3,10 +3,8 @@ package br.com.luizalabs.util.exceptionhandler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import javax.naming.ServiceUnavailableException;
 import javax.transaction.NotSupportedException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -17,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -30,13 +29,11 @@ import org.springframework.web.client.HttpClientErrorException.Forbidden;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-
 import br.com.luizalabs.util.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
@@ -145,7 +142,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		HttpStatus httpStatus = getHttpStatusByExceptionType(ex);
 		return new ResponseEntity<>(ex.getErroList(), httpStatus);
 	}
-
+	
 	/**
 	 * @author Marcelo Rebouças 7 de mai de 2018 - 10:29:42 [marceloreboucas10@gmail.com]
 	 * @return Status

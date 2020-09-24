@@ -25,7 +25,9 @@ public class ClienteCommandService {
 		this.clienteRepository.save(cliente).subscribe();
 	}
 
-	public void deletar(Cliente cliente) {
-		this.clienteRepository.delete(cliente);
+	public void deletar(String id) throws BusinessException {
+		Cliente cliente = new Cliente(id);
+		this.clienteRulesService.validarExclusaoCliente(cliente);
+		this.clienteRepository.delete(cliente).subscribe();
 	}
 }
