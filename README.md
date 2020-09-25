@@ -61,12 +61,6 @@ http://localhost:8090/api/swagger-ui.html
 
 plugin sonar lint (eclipse, sts ou vs code)
 
-# Criar a imagem docker
-No terminal, no diretório raiz do projeto execute:
-
-```
-docker build -t cliente-api .
-```
 
 # Testar o Micro Serviço - Local host
 
@@ -119,6 +113,7 @@ passwor: user123
 
 <b>Obs.:</b> vc pode verificar mais detalhes na collection 'user_auth' do mongo ou até mesmo criar outros pelo end-point que está documentado no swagger.
 
+
 # Deployar no kubernets
 
 <h4>É importante que as etapas a seguir sejam realizadas todas no mesmo terminal</h4>
@@ -138,7 +133,7 @@ eval $(minikube docker-env)
 <h3>Buildar a imagem no docker</h3>
 
 ```
-docker build -t cliente-api-luizalabs:0.1.0 .
+docker build -t cliente-api-luizalabs .
 ```
 
 <h3>Deployar a imagem docker no minikube</h3>
