@@ -1,6 +1,9 @@
 # Descrição da API
 
-Api para administrar os clientes, produtos favoritos e consultar os produtos.
+Api Rest responsável por: <br>
+<b>1) administrar os clientes e produtos favoritos;</b><br>
+<b>2) Consultar a listagem de produtos por id e página;</b><br>
+<b>3) Inserir usuários de autenticação.</b><br>
 
 ## Tecnologias
 
