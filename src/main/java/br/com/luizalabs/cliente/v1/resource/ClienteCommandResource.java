@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import br.com.luizalabs.cliente.v1.model.Cliente;
+import br.com.luizalabs.cliente.v1.model.ClienteDTO;
 import br.com.luizalabs.cliente.v1.service.ClienteCommandService;
-import br.com.luizalabs.usuarioautenticaco.enumeration.RolesEnum;
 import br.com.luizalabs.util.constants.RoleUtil;
 import br.com.luizalabs.util.exception.BusinessException;
 import io.swagger.annotations.Api;
@@ -27,7 +26,7 @@ import reactor.core.publisher.Mono;
 /**
  * @author Marcelo Reboucas - marceloreboucas10@gmail.com - 20 de set de 2020 as 10:23:06
  */
-@Api(tags = {"Clientes"}, description = "Manutenção de clientes")
+@Api(tags = {"Clientes"})
 @SwaggerDefinition(tags = {@Tag(name = "Clientes")})
 @RestController
 @RequestMapping("v1/cliente")
@@ -45,8 +44,8 @@ public class ClienteCommandResource {
 	@ApiResponses({@ApiResponse(code = 201, message = "Criado"), @ApiResponse(code = 405, message = "Método informado na requisição não é o esperado pelo backend")})
 	@ResponseStatus(code = HttpStatus.CREATED)
 	@PostMapping
-	@PreAuthorize("hasRole('" + RoleUtil.ROLE_ADMIN_SPRING +"')" + " && hasRole('" + RoleUtil.ROLE_USER_SPRING +"')")
-	public Mono<Void> salvar(@Valid @RequestBody Cliente clienteDto) throws BusinessException {
+	@PreAuthorize("hasRole('" + RoleUtil.ROLE_ADMIN_SPRING +"')")
+	public Mono<Void> salvar(@Valid @RequestBody ClienteDTO clienteDto) throws BusinessException {
 		this.clienteCommandService.salvar(clienteDto);
 		return Mono.empty();
 	}
@@ -55,8 +54,8 @@ public class ClienteCommandResource {
 	@ApiResponses({@ApiResponse(code = 200, message = "Ok"), @ApiResponse(code = 405, message = "Método informado na requisição não é o esperado pelo backend")})
 	@ResponseStatus(code = HttpStatus.OK)
 	@PutMapping
-	@PreAuthorize("hasRole('" + RoleUtil.ROLE_ADMIN_SPRING +"')" + " && hasRole('" + RoleUtil.ROLE_USER_SPRING +"')")
-	public Mono<Void> atualizar(@Valid @RequestBody Cliente clienteDto) throws BusinessException {
+	@PreAuthorize("hasRole('" + RoleUtil.ROLE_ADMIN_SPRING +"')")
+	public Mono<Void> atualizar(@Valid @RequestBody ClienteDTO clienteDto) throws BusinessException {
 		this.clienteCommandService.salvar(clienteDto);
 		return Mono.empty();
 	}

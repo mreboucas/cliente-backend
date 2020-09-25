@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,12 +19,11 @@ import br.com.luizalabs.util.exceptionhandler.CustomAuthenticationFailureHandler
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private final ImplementsUserDetailService userDetailsService;
+
 	/**
-	private static final String CLIENTE_URL_BASE_RESOURCE = "/api/v1/cliente";
-	private static final String PRODUTO_URL_BASE_RESOURCE = "/api/v1/produto";
-	private static final  String ROLE_ADMIN = "ADMIN";
-	private static final String ROLE_USER = "USER";
-	*/
+	 * private static final String CLIENTE_URL_BASE_RESOURCE = "/api/v1/cliente"; private static final String PRODUTO_URL_BASE_RESOURCE =
+	 * "/api/v1/produto"; private static final String ROLE_ADMIN = "ADMIN"; private static final String ROLE_USER = "USER";
+	 */
 	public SecurityConfig(ImplementsUserDetailService userDetailsService) {
 		this.userDetailsService = userDetailsService;
 	}
@@ -31,24 +31,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable()
-			.authorizeRequests()
-			//.antMatchers(HttpMethod.GET, "/**").permitAll()
-			.anyRequest().authenticated()
-			.and().httpBasic();
-		
-//		http.csrf().disable()
-//				.authorizeRequests()
-//		      /** .antMatchers(HttpMethod.GET, "/").permitAll() */
-//				.antMatchers(HttpMethod.GET, PRODUTO_URL_BASE_RESOURCE).hasAnyRole(ROLE_ADMIN, ROLE_USER)
-//		      .antMatchers(HttpMethod.GET, CLIENTE_URL_BASE_RESOURCE).hasAnyRole(ROLE_ADMIN, ROLE_USER)
-//		      .antMatchers(HttpMethod.POST, CLIENTE_URL_BASE_RESOURCE).hasRole(ROLE_ADMIN)
-//		      .antMatchers(HttpMethod.PUT, CLIENTE_URL_BASE_RESOURCE).hasRole(ROLE_ADMIN)
-//		      .antMatchers(HttpMethod.DELETE, CLIENTE_URL_BASE_RESOURCE).hasRole(ROLE_ADMIN)
-//		      .anyRequest().authenticated() 
-//		      /** .and().formLogin().permitAll() */
-//		      .and().httpBasic();
-//			   /** .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")); */
+		http.csrf().disable().authorizeRequests()
+		      /** .antMatchers(HttpMethod.GET, "/**").permitAll() */
+		      .anyRequest().authenticated().and().httpBasic();
+		/**
+		 * 
+		// http.csrf().disable()
+		// .authorizeRequests()
+		// .antMatchers(HttpMethod.GET, "/").permitAll() 
+		// .antMatchers(HttpMethod.GET, PRODUTO_URL_BASE_RESOURCE).hasAnyRole(ROLE_ADMIN, ROLE_USER)
+		// .antMatchers(HttpMethod.GET, CLIENTE_URL_BASE_RESOURCE).hasAnyRole(ROLE_ADMIN, ROLE_USER)
+		// .antMatchers(HttpMethod.POST, CLIENTE_URL_BASE_RESOURCE).hasRole(ROLE_ADMIN)
+		// .antMatchers(HttpMethod.PUT, CLIENTE_URL_BASE_RESOURCE).hasRole(ROLE_ADMIN)
+		// .antMatchers(HttpMethod.DELETE, CLIENTE_URL_BASE_RESOURCE).hasRole(ROLE_ADMIN)
+		// .anyRequest().authenticated()
+		// .and().formLogin().permitAll()
+		// .and().httpBasic();
+		// .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
+		*/
 
 	}
 
@@ -63,14 +63,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
 
 	}
-	
-	 @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler() {
-        return new CustomAuthenticationFailureHandler();
-    }
 
-	/*
-	 * @Override public void configure(WebSecurity web) throws Exception { web.ignoring().antMatchers("/materialize/**", "/style/**"); }
-	 */
+	@Bean
+	public AuthenticationFailureHandler authenticationFailureHandler() {
+		return new CustomAuthenticationFailureHandler();
+	}
 
+
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+	    web.ignoring().antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources/**", "/configuration/**", "/swagger-ui.html", "/webjars/**");
+	}
 }

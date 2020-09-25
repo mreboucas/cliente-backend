@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import br.com.luizalabs.cliente.v1.model.Cliente;
+import br.com.luizalabs.cliente.v1.model.ClienteDTO;
 import br.com.luizalabs.cliente.v1.model.ProdutoFavorito;
 import br.com.luizalabs.produto.v1.dto.ProdutoDTO;
 import br.com.luizalabs.produto.v1.service.ProdutoQueryService;
@@ -36,7 +36,7 @@ public class ClienteRulesService {
 		this.produtoQueryService = produtoQueryService;
 	}
 
-	public void realizarValidacoes(Cliente cliente) throws BusinessException {
+	public void realizarValidacoes(ClienteDTO cliente) throws BusinessException {
 		verificarSeEmailJaEstaCadastrado(cliente);
 		verificarSeOsProdutosExistemNaBase(cliente);
 		verificarSeClientePossuiProdutoDuplicado(cliente);
@@ -49,14 +49,14 @@ public class ClienteRulesService {
 	 * @param cliente
 	 * @throws BusinessException
 	 */
-	private void verificarSeEmailJaEstaCadastrado(Cliente cliente) throws BusinessException {
+	private void verificarSeEmailJaEstaCadastrado(ClienteDTO cliente) throws BusinessException {
 
-		Cliente clienteEmailParam = new Cliente();
+		ClienteDTO clienteEmailParam = new ClienteDTO();
 		clienteEmailParam.setEmail(cliente.getEmail());
-		Flux<Cliente> clienteAux = clienteQueryService.listarPorParametros(clienteEmailParam);
+		Flux<ClienteDTO> clienteAux = clienteQueryService.listarPorParametros(clienteEmailParam);
 
 		if (clienteAux != null && clienteAux.count().block() > 0) {
-			Optional<Cliente> cliOptional = clienteAux.collectList().block().stream().filter(cli -> !cli.getId().equals(cliente.getId())).findFirst();
+			Optional<ClienteDTO> cliOptional = clienteAux.collectList().block().stream().filter(cli -> !cli.getId().equals(cliente.getId())).findFirst();
 
 			if (cliOptional.isPresent()) {
 				throw new BusinessException(new Erro(badRequestCode, "Email já cadastrado", "Email já cadastrado", "email"));
@@ -64,14 +64,14 @@ public class ClienteRulesService {
 		}
 	}
 
-	private void verificarSeClientePossuiProdutoDuplicado(Cliente cliente) throws BusinessException {
+	private void verificarSeClientePossuiProdutoDuplicado(ClienteDTO cliente) throws BusinessException {
 
 		if (!CollectionUtils.isEmpty(cliente.getProdutoFavoritoList())) {
 			Set<Erro> erroSet = new LinkedHashSet<>();
 			List<ProdutoFavorito> produtoFavoritoAuxList = cliente.getProdutoFavoritoList();
 			if (cliente.getId() != null) {
-				Mono<Cliente> clienteMono = this.clienteQueryService.findById(cliente.getId());
-				Cliente clienteDb = clienteMono.block();
+				Mono<ClienteDTO> clienteMono = this.clienteQueryService.findById(cliente.getId());
+				ClienteDTO clienteDb = clienteMono.block();
 				if (clienteDb != null && !CollectionUtils.isEmpty(clienteDb.getProdutoFavoritoList())) {
 					produtoFavoritoAuxList.addAll(clienteDb.getProdutoFavoritoList());
 				}
@@ -91,7 +91,7 @@ public class ClienteRulesService {
 	}
 	
 	@SuppressWarnings("restriction")
-	private void verificarSeOsProdutosExistemNaBase(Cliente cliente) throws BusinessException {
+	private void verificarSeOsProdutosExistemNaBase(ClienteDTO cliente) throws BusinessException {
 		
 		if (!CollectionUtils.isEmpty(cliente.getProdutoFavoritoList())) {
 			List<Erro> erroList = new ArrayList<>();
@@ -117,11 +117,11 @@ public class ClienteRulesService {
 		}
 	}
 	
-	public void validarExclusaoCliente(Cliente cliente) throws BusinessException {
+	public void validarExclusaoCliente(ClienteDTO cliente) throws BusinessException {
 		if (cliente == null || !StringUtils.isNotBlank(cliente.getId())) {
 			throw new BusinessException(new Erro(badRequestCode, "Cliente não pode ser excluído, id obrigatório", null, "id"));
 		}
-		Mono<Cliente> cliAux = clienteQueryService.findById(cliente.getId());
+		Mono<ClienteDTO> cliAux = clienteQueryService.findById(cliente.getId());
 		
 		if (cliAux.block() == null) {
 			Erro erro = new Erro(badRequestCode, "Cliente não pode ser excluído, pois não foi encontrado na base de dados com esse id", null, null);

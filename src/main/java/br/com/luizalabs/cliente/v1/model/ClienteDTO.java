@@ -24,7 +24,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @ApiModel(value = "Cliente", description = "Cliente API Magalu/LuizaLabs")
 @Document(collection = "clientes")
-public class Cliente {
+public class ClienteDTO {
 	
 	@ApiModelProperty("Identificador do cliente")
 	@Id
@@ -46,8 +46,9 @@ public class Cliente {
 	@ApiModelProperty("Listagem dos produtos favoritos do cliente")
 	private List<ProdutoFavorito> produtoFavoritoList;
 
-	public Cliente(String id) {
+	public ClienteDTO(String id, String nome) {
 		super();
 		this.id = id;
+		this.nome = nome;
 	}
 }

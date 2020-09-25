@@ -1,7 +1,7 @@
 package br.com.luizalabs.cliente.v1.service;
 
 import org.springframework.stereotype.Service;
-import br.com.luizalabs.cliente.v1.model.Cliente;
+import br.com.luizalabs.cliente.v1.model.ClienteDTO;
 import br.com.luizalabs.cliente.v1.repository.ClienteRepository;
 import br.com.luizalabs.util.exception.BusinessException;
 
@@ -20,13 +20,13 @@ public class ClienteCommandService {
 		this.clienteRepository = clienteRepository;
 	}
 
-	public void salvar(Cliente cliente) throws BusinessException {
+	public void salvar(ClienteDTO cliente) throws BusinessException {
 		clienteRulesService.realizarValidacoes(cliente);
 		this.clienteRepository.save(cliente).subscribe();
 	}
 
 	public void deletar(String id) throws BusinessException {
-		Cliente cliente = new Cliente(id);
+		ClienteDTO cliente = new ClienteDTO(id, null);
 		this.clienteRulesService.validarExclusaoCliente(cliente);
 		this.clienteRepository.delete(cliente).subscribe();
 	}

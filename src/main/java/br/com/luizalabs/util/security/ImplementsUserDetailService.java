@@ -6,8 +6,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import br.com.luizalabs.usuarioautenticaco.v1.modelo.UsuarioAutenticacao;
-import br.com.luizalabs.usuarioautenticaco.v1.repository.UsuarioRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import br.com.luizalabs.usuarioautenticaco.v1.modelo.UsuarioAutenticacaoDTO;
+import br.com.luizalabs.usuarioautenticaco.v1.modelo.UsuarioAutenticacaoDetails;
+import br.com.luizalabs.usuarioautenticaco.v1.repository.UsuarioAutenticacoRepository;
 import reactor.core.publisher.Mono;
 
 /**
@@ -16,9 +18,9 @@ import reactor.core.publisher.Mono;
 @Component
 public class ImplementsUserDetailService implements UserDetailsService {
 
-	private final UsuarioRepository usuarioRepository;
+	private final UsuarioAutenticacoRepository usuarioRepository;
 
-	public ImplementsUserDetailService(UsuarioRepository usuarioRepository) {
+	public ImplementsUserDetailService(UsuarioAutenticacoRepository usuarioRepository) {
 		super();
 		this.usuarioRepository = usuarioRepository;
 	}
@@ -28,9 +30,11 @@ public class ImplementsUserDetailService implements UserDetailsService {
 
 		/** List<GrantedAuthority> gratAuthoritieList = AuthorityUtils.createAuthorityList("ROLE_ADMIN","ROLE_USER"); */
 
-		Mono<UsuarioAutenticacao> usuarioAutenticacaoMono = Optional.ofNullable(this.usuarioRepository.findByUserName(userName)).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado pelo user name"));
+		Mono<UsuarioAutenticacaoDTO> usuarioAutenticacaoMono = Optional.ofNullable(this.usuarioRepository.findByUserName(userName)).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado pelo user name"));
 		
-		UsuarioAutenticacao usuario = usuarioAutenticacaoMono.block();
+		UsuarioAutenticacaoDTO usuarioAutenticacao = usuarioAutenticacaoMono.block();
+		
+		UsuarioAutenticacaoDetails usuario = new ObjectMapper().convertValue(usuarioAutenticacao, UsuarioAutenticacaoDetails.class);
 
 		return new User(usuario.getUsername(), usuario.getPassword(), usuario.isEnabled(), usuario.isAccountNonExpired(), usuario.isCredentialsNonExpired(), usuario.isAccountNonLocked(), usuario.getAuthorities());
 	}

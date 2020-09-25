@@ -20,9 +20,12 @@ Api para administrar os clientes, produtos favoritos e consultar os produtos.
 
 <li>Docker</li>
 
+<li>Kuberntes/Minikube</li>
+
 <li>Lombok</li>
 
 <li>Junit</li>
+
 
 </ul>
 
@@ -91,4 +94,66 @@ db.createUser({user: "luizalabs_user", pwd: "SSDW/Thtywtu9vDYl0T9WHk9Ujze16WH0LU
 
 3) Olhar o swagger, pegar os examplos dos JSONS e fazer os devidos testes (postman, insomnia etc);
 
-4) Autenticação do serviço:
+4) Autenticação do serviço (Basic Autentication):
+
+<h3>Administrador</h3>
+
+```
+user: admin
+passwor: admin123
+
+
+```
+
+<h3>Usuário padrão</h3>
+
+```
+user: user
+passwor: user123
+
+
+```
+
+<b>Obs.:</b> vc pode verificar mais detalhes na collection 'user_auth' do mongo ou até mesmo criar outros pelo end-point que está documentado no swagger.
+
+# Deployar no kubernets
+
+<h4>É importante que as etapas a seguir sejam realizadas todas no mesmo terminal</h4>
+
+<h3> Inicializar minikube</h3>
+
+```
+minikube start
+```
+
+<h3> Setar docker env (permitir o kubernets acessar/visualizar as imagens docker)</h3>
+
+```
+eval $(minikube docker-env)
+```
+
+<h3>Buildar a imagem no docker</h3>
+
+```
+docker build -t cliente-api-luizalabs:0.1.0 .
+```
+
+<h3>Deployar a imagem docker no minikube</h3>
+
+Acesse o diretório resource do projeto (src/main/resources) e execute:
+
+```
+kubectl apply -f deployment.yml
+```
+
+<h3> Checar o deploy</h3>
+
+```
+kubectl get deployments
+```
+
+<h3> Checar os pods</h3>
+
+```
+kubectl get pods
+```

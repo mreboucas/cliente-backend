@@ -16,7 +16,36 @@ spec:
     spec:
       containers:
       - name: cliente-api-luizalabs
-        image: cliente-api-luizalabs:0.1.0
+        image: cliente-api-luizalabs
         imagePullPolicy: Never
         ports:
         - containerPort: 8090
+#        readinessProbe:
+#          httpGet:
+#            path: /actuator/health
+#            port: 8080
+#          initialDelaySeconds: 5
+#        livenessProbe:
+#          httpGet:
+#            path: /actuator/health
+#            port: 8080
+#          initialDelaySeconds: 5
+      restartPolicy: Always
+      
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: cliente-api-luizalabs-service
+  labels:
+    name: cliente-api-luizalabs
+spec:
+  selector:
+    app: cliente-api-luizalabs
+  type: NodePort
+  ports:
+    - nodePort: 30001
+      protocol: TCP
+      port: 8090
+      targetPort: 8090

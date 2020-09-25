@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import br.com.luizalabs.cliente.v1.model.Cliente;
+import br.com.luizalabs.cliente.v1.model.ClienteDTO;
 import br.com.luizalabs.cliente.v1.model.ProdutoFavorito;
 
 /**
@@ -20,7 +20,7 @@ import br.com.luizalabs.cliente.v1.model.ProdutoFavorito;
 @SpringBootTest
 public class ClienteTest {
 
-	private List<Cliente> clienteList;
+	private List<ClienteDTO> clienteList;
 	private List<ProdutoFavorito> produtoFavoritoList;
 	
 	@Autowired
@@ -36,7 +36,7 @@ public class ClienteTest {
 		produtoFavoritoList.add(produtoFavorito);
 		produtoFavorito = new ProdutoFavorito("0462c6e7-71d9-bc1f-0224-3ddcfa7d794e", "Restaurador Capilar Extrait Phyto-Aromatique 30ml");
 		produtoFavoritoList.add(produtoFavorito);
-		Cliente cliente = new Cliente(null, "David Gilmour", "davidgilmour@pinkfloyd.com", produtoFavoritoList);
+		ClienteDTO cliente = new ClienteDTO(null, "David Gilmour", "davidgilmour@pinkfloyd.com", produtoFavoritoList);
 		clienteList.add(cliente);
 
 		produtoFavoritoList = new ArrayList<>();
@@ -44,7 +44,7 @@ public class ClienteTest {
 		produtoFavoritoList.add(produtoFavorito);
 		produtoFavorito = new ProdutoFavorito("ae771c1b-5fc9-f7ef-fde1-dc2ee578bf96", null);
 		produtoFavoritoList.add(produtoFavorito);
-		cliente = new Cliente(null, "Ozzy Osbourne", "ozzy@blacksabbath.com", produtoFavoritoList);
+		cliente = new ClienteDTO(null, "Ozzy Osbourne", "ozzy@blacksabbath.com", produtoFavoritoList);
 		clienteList.add(cliente);
 
 	}
@@ -52,7 +52,7 @@ public class ClienteTest {
 	@Test
 	public void salvar() {
 		this.clienteList.forEach(cliente -> {
-			Cliente clienteAux = this.clienteServiceTest.salvar(cliente);
+			ClienteDTO clienteAux = this.clienteServiceTest.salvar(cliente);
 			assertEquals(clienteAux.getNome(), cliente.getNome());
 			assertNotNull(clienteAux.getId());
 			assertNotNull(clienteAux.getProdutoFavoritoList());
@@ -61,7 +61,7 @@ public class ClienteTest {
 	
 	@Test
 	public void deletarTodos() {
-		List<Cliente> clienteList = this.clienteServiceTest.buscarTodos();
+		List<ClienteDTO> clienteList = this.clienteServiceTest.buscarTodos();
 		long qtdRemovida = this.clienteServiceTest.deletarTodos();
 		assertEquals(clienteList != null ? clienteList.size() : 0, qtdRemovida);
 	}

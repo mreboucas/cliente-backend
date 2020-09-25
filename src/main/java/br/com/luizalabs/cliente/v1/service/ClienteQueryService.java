@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import br.com.luizalabs.cliente.v1.model.Cliente;
+import br.com.luizalabs.cliente.v1.model.ClienteDTO;
 import br.com.luizalabs.cliente.v1.repository.ClienteRepository;
 import br.com.luizalabs.util.mongo.CriteriaMongoUtil;
 import br.com.luizalabs.util.mongo.enumeration.ParameterMongoEnum;
@@ -28,11 +28,11 @@ public class ClienteQueryService {
 		this.mongoTemplate = mongoTemplate;
 	}
 
-	public Flux<Cliente> listarTodos() {
+	public Flux<ClienteDTO> listarTodos() {
 		return clienteRepository.findAll();
 	}
 
-	public Flux<Cliente> listarPorParametros(Cliente cliente) {
+	public Flux<ClienteDTO> listarPorParametros(ClienteDTO cliente) {
 
 		Query query = new Query();
 		query.limit(30);
@@ -47,12 +47,12 @@ public class ClienteQueryService {
 			query.addCriteria(criteria);
 		}
 
-		List<Cliente> clientList = this.mongoTemplate.find(query, Cliente.class);
+		List<ClienteDTO> clientList = this.mongoTemplate.find(query, ClienteDTO.class);
 
 		return Flux.fromIterable(clientList);
 	}
 	
-	public Mono<Cliente> findById(String id) {
+	public Mono<ClienteDTO> findById(String id) {
 		return this.clienteRepository.findById(id);
 	}
 

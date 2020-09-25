@@ -27,15 +27,15 @@ public class Role implements GrantedAuthority {
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
-	@NotEmpty
-	@NotNull
+	@NotEmpty (message= "role deve ser preenchido: ROLE_ADMIN ou ROLE_USER")
+	@NotNull(message= "role deve ser preenchido: ROLE_ADMIN ou ROLE_USER")
 	@ApiModelProperty("Role de acesso: ROLE_ADMIN ou ROLE_USER")
-	private String role;
+	private String roleName;
 
 	@Override
 	@ApiModelProperty(hidden = true)
 	@JsonIgnore
 	public String getAuthority() {
-		return this.role;
+		return this.roleName;
 	}
 }

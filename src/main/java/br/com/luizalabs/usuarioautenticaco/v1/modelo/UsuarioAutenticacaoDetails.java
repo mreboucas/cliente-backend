@@ -6,11 +6,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.annotations.ApiModel;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,10 +22,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "Usuário de autenticação", description = "Usuário que será utilizado para se logar no serviço")
-@JsonInclude()
-@Document("user_auth")
-public class UsuarioAutenticacao implements UserDetails {
+public class UsuarioAutenticacaoDetails implements UserDetails {
 	
 	private static final long serialVersionUID = 9157695151181913689L;
 
@@ -46,7 +41,8 @@ public class UsuarioAutenticacao implements UserDetails {
 	private String password;
 	
 	@Valid
-	@NotNull
+	@NotNull(message= "roleList deve ser preenchido: ROLE_ADMIN ou ROLE_USER")
+	@NotEmpty(message= "roleList deve ser preenchido: ROLE_ADMIN ou ROLE_USER")
 	@ApiModelProperty("Roles de permissão do usuário: ROLE_ADMIN ou ROLE_USER")
 	private Set<Role> roleList;
 	
@@ -90,5 +86,9 @@ public class UsuarioAutenticacao implements UserDetails {
 	@ApiModelProperty(hidden = true)
 	public boolean isEnabled() {
 		return true;
+	}
+	
+	public void encriptyPassword() {
+		this.password = new BCryptPasswordEncoder().encode(password);
 	}
 }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.DeleteResult;
-import br.com.luizalabs.cliente.v1.model.Cliente;
+import br.com.luizalabs.cliente.v1.model.ClienteDTO;
 import br.com.luizalabs.cliente.v1.service.ClienteCommandService;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,7 +34,7 @@ public class ClienteServiceTeste {
 		this.clienteService = clienteService;
 	}
 	
-	public Cliente salvar(Cliente cliente) {
+	public ClienteDTO salvar(ClienteDTO cliente) {
 		return this.mongoTemplate.save(cliente, COLLECTION_CLIENTE_TEST);
 	}
 	
@@ -46,7 +46,7 @@ public class ClienteServiceTeste {
 		return deleteResult.getDeletedCount();
 	}
 	
-	public List<Cliente> buscarTodos() {
-		return mongoTemplate.findAll(Cliente.class, COLLECTION_CLIENTE_TEST);
+	public List<ClienteDTO> buscarTodos() {
+		return mongoTemplate.findAll(ClienteDTO.class, COLLECTION_CLIENTE_TEST);
 	}
 }
