@@ -5,6 +5,8 @@ Api Rest responsável por: <br>
 <b>2) Consultar a listagem de produtos por id e página;</b><br>
 <b>3) Inserir usuários de autenticação.</b><br>
 
+O tópico que possui os passos para o serviço ser testado é: <b>Testar o Micro Serviço - Local host </b>
+
 ## Tecnologias
 
 <ul>
