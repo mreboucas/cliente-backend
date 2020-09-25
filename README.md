@@ -5,7 +5,7 @@ Api Rest responsável por: <br>
 <b>2) Consultar a listagem de produtos por id e página;</b><br>
 <b>3) Inserir usuários de autenticação.</b><br>
 
-O tópico que possui os passos para o serviço ser testado é: <b>Testar o Micro Serviço - Local host </b> que está abaixo.
+O tópico que possui os passos para o serviço ser testado é: <b>https://github.com/mreboucas/cliente-backend#testar-o-micro-servi%C3%A7o---local-host </b> que está abaixo.
 
 ## Tecnologias
 
