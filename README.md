@@ -89,9 +89,9 @@ db.createUser({user: "luizalabs_user", pwd: "SSDW/Thtywtu9vDYl0T9WHk9Ujze16WH0LU
  
 ```
 
-2) Subir o projeto
+2) Subir o projeto via IDE
 
-3) Olhar o swagger, pegar os examplos dos JSONS e fazer os devidos testes (postman, insomnia etc);
+3) Olhar o swagger (http://localhost:8090/api/swagger-ui.html), pegar os examplos dos JSONS e fazer os devidos testes (postman, insomnia etc);
 
 4) Autenticação do serviço (Basic Autentication):
 
