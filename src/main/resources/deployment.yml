@@ -13,9 +13,10 @@ spec:
     metadata:
       labels:
         app: cliente-api-luizalabs
+        name: cliente-api-luizalabs-pod
     spec:
       containers:
-      - name: cliente-api-luizalabs
+      - name: cliente-api-luizalabs-container
         image: cliente-api-luizalabs
         imagePullPolicy: Never
         ports:
